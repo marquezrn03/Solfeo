@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solfeo Avanzado para Coro - Módulo 1: Ritmo y Melodía</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -15,8 +16,9 @@
         label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #374151; font-size: 0.875rem; }
         input[type="range"] { width: 100%; cursor: pointer; accent-color: #84cc16; }
         input[type="number"], select { padding: 0.5rem; border: 1px solid #D1D5DB; border-radius: 0.375rem; width: 100%; }
-        button, .styled-button-link { background-color: #a3e635; color: #3f6212; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 600; transition: background-color 0.2s; display: inline-block; text-align: center; border: none; }
+        button, .styled-button-link { background-color: #a3e635; color: #3f6212; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 600; transition: background-color 0.2s; display: inline-block; text-align: center; border: none; cursor: pointer;}
         button:hover, .styled-button-link:hover { background-color: #84cc16; }
+        button:disabled { background-color: #d9f99d; cursor: not-allowed; }
         h1 { color: #111827; font-size: 1.875rem; line-height: 2.25rem; font-weight: 700;}
         h2 { color: #111827; font-size: 1.5rem; line-height: 2rem; font-weight: 700;}
         h3 { color: #365314; font-size: 1.25rem; line-height: 1.75rem; font-weight: 600; border-bottom: 2px solid #a3e635; padding-bottom: 0.35rem; margin-top: 2rem; margin-bottom: 1rem; }
@@ -37,14 +39,14 @@
         nav.page-nav a { margin: 0 0.75rem; color: #f0fdf4; font-weight: 500; text-decoration: none; border-bottom: 2px solid transparent; transition: border-color 0.2s; padding-bottom: 2px; }
         nav.page-nav a:hover, nav.page-nav a.active { border-color: #a3e635; color: #ffffff;}
         .interactive-block { margin-top: 1.5rem; margin-bottom: 1.5rem; padding: 1.5rem; border: 1px solid #d9f99d; border-radius: 0.5rem; background-color: #ffffff; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
-        .notation-container { background-color: #f7fee7; border: 1px solid #d9f99d; padding: 1rem; border-radius: 0.25rem; min-height: 100px; overflow-x: auto; }
-        .notation-svg { display: block; min-width: 300px; }
-        .staff-line { stroke: #bfdbfe; stroke-width: 1; }
+        .notation-container { background-color: #f0fdf4; border: 1px solid #d9f99d; padding: 10px; border-radius: 0.25rem; min-height: 120px; overflow-x: auto; display: flex; align-items: center; }
+        .notation-svg { display: block; min-width: 400px; height: 100px; }
+        .staff-line { stroke: #a3a3a3; stroke-width: 1; }
         .note-head { fill: #1f2937; }
         .note-stem { stroke: #1f2937; stroke-width: 1.5; }
-        .measure-line { stroke: #9ca3af; stroke-width: 1; }
-        .clef { font-size: 36px; font-family: serif; fill: #1f2937;}
-        .time-sig-num { font-size: 16px; font-weight: bold; fill: #1f2937; text-anchor: middle;}
+        .measure-line { stroke: #525252; stroke-width: 1; }
+        .clef { font-size: 42px; font-family: serif; fill: #1f2937; dominant-baseline: middle;}
+        .time-sig-num { font-size: 18px; font-weight: bold; fill: #1f2937; text-anchor: middle; dominant-baseline: middle;}
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 antialiased">
@@ -54,7 +56,7 @@
             <h1 class="text-2xl md:text-3xl font-bold">Solfeo Avanzado para Cantantes de Coro</h1>
             <p class="header-subtitle">Módulo 1: Ritmo y Melodía Complejos</p>
             <nav class="page-nav mt-2 text-sm md:text-base">
-                <a href="solfeo_mod1.html" class="active">Módulo 1</a> |
+                <a href="#solfeo_mod1" class="active">Módulo 1</a> |
                 <a href="#">Módulo 2</a> |
                 <a href="#">Módulo 3</a> |
                 <a href="#">Módulo 4</a>
@@ -95,11 +97,11 @@
             <p>La síncopa avanzada y los cambios de métrica frecuentes o irregulares desafían la estabilidad del pulso interno. Anticipar visualmente estos cambios y mantener una referencia interna del pulso son habilidades clave.</p>
 
             <div class="interactive-block">
-                <h4 class="text-lg font-semibold mb-3 text-center text-lime-700">Generador/Práctica Rítmica</h4>
-                <p class="instructional-text text-center mb-4">Ajusta los parámetros para generar y practicar ritmos complejos.</p>
+                <h4 class="text-lg font-semibold mb-3 text-center text-lime-700">Generador Visual de Ritmos</h4>
+                <p class="instructional-text text-center mb-4">Ajusta los parámetros para generar y visualizar ritmos complejos.</p>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                     <div>
-                        <label for="rhythm-tempo-slider">Tempo (BPM): <span id="rhythm-tempo-value">90</span></label>
+                        <label for="rhythm-tempo-slider">Tempo Conceptual (BPM): <span id="rhythm-tempo-value">90</span></label>
                         <input type="range" id="rhythm-tempo-slider" min="40" max="160" value="90" step="5">
                     </div>
                     <div>
@@ -119,11 +121,10 @@
                     </div>
                 </div>
                 <div class="notation-container mb-4">
-                    <svg id="rhythm-notation-svg" class="notation-svg" height="80"></svg>
+                    <svg id="rhythm-notation-svg" class="notation-svg" viewBox="0 0 600 100" preserveAspectRatio="xMinYMid meet"></svg>
                 </div>
                 <div class="text-center">
-                    <button id="generate-rhythm-btn" class="mr-2">Generar Nuevo Ritmo</button>
-                    <button id="play-rhythm-btn">Reproducir Ritmo</button>
+                    <button id="generate-rhythm-btn">Generar Nuevo Ritmo</button>
                 </div>
             </div>
         </section>
@@ -145,8 +146,8 @@
             <p>La lectura modal requiere reconocer y entonar los patrones interválicos característicos de modos como el Dórico, Frigio, Lidio, Mixolidio. La música atonal o con tonalidad extendida a menudo se basa más en la lectura precisa de intervalos específicos que en la relación con un centro tonal claro.</p>
 
             <div class="interactive-block">
-                 <h4 class="text-lg font-semibold mb-3 text-center text-lime-700">Entrenador de Intervalos Complejos</h4>
-                 <p class="instructional-text text-center mb-4">Genera intervalos complejos para practicar su reconocimiento visual y auditivo.</p>
+                 <h4 class="text-lg font-semibold mb-3 text-center text-lime-700">Entrenador Visual de Intervalos</h4>
+                 <p class="instructional-text text-center mb-4">Genera intervalos complejos para practicar su reconocimiento visual.</p>
                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                      <div>
                          <label for="interval-type-select">Tipo de Intervalo:</label>
@@ -171,24 +172,23 @@
                          </select>
                      </div>
                      <div>
-                        <label for="interval-complexity-slider">Complejidad Contextual:</label>
+                        <label for="interval-complexity-slider">Complejidad Contextual (Conceptual):</label>
                         <input type="range" id="interval-complexity-slider" min="0" max="100" value="0" step="10">
                         <div class="slider-label-container"><span>Simple</span><span id="interval-complexity-value">0</span><span>Complejo</span></div>
                      </div>
                  </div>
                  <div class="notation-container mb-4">
-                     <svg id="interval-notation-svg" class="notation-svg" height="100"></svg>
+                     <svg id="interval-notation-svg" class="notation-svg" viewBox="0 0 200 100" preserveAspectRatio="xMinYMid meet"></svg>
                  </div>
                  <div class="text-center">
                      <button id="generate-interval-btn" class="mr-2">Generar Intervalo</button>
-                     <button id="play-interval-btn" class="mr-2">Reproducir</button>
                      <button id="show-interval-btn">Mostrar Nombre</button>
                  </div>
                  <div id="interval-answer-output" class="output-box mt-4 invisible">Respuesta aparecerá aquí.</div>
             </div>
 
             <div class="interactive-block">
-                 <h4 class="text-lg font-semibold mb-3 text-center text-lime-700">Generador de Fragmentos Melódicos</h4>
+                 <h4 class="text-lg font-semibold mb-3 text-center text-lime-700">Generador Visual de Melodías</h4>
                  <p class="instructional-text text-center mb-4">Genera melodías cortas para practicar lectura a primera vista con dificultad ajustable.</p>
                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                      <div>
@@ -213,17 +213,16 @@
                      </div>
                  </div>
                  <div class="notation-container mb-4">
-                     <svg id="melody-notation-svg" class="notation-svg" height="100"></svg>
+                     <svg id="melody-notation-svg" class="notation-svg" viewBox="0 0 600 100" preserveAspectRatio="xMinYMid meet"></svg>
                  </div>
                  <div class="text-center">
-                     <button id="generate-melody-btn" class="mr-2">Generar Melodía</button>
-                     <button id="play-melody-btn">Reproducir Melodía</button>
+                     <button id="generate-melody-btn">Generar Melodía</button>
                  </div>
             </div>
         </section>
 
          <section id="aplicacion" class="mb-12 p-6 rounded-lg shadow-lg section-bg-light dynamic-content">
-            <h2 class="text-lime-700 border-b-2 border-lime-200 pb-2 mb-6">1.4 Aplicación Coral</h2>
+            <h2 class="text-lime-700 border-b-2 border-lime-200 pb-2 mb-6">1.4 Integración y Aplicación Coral</h2>
             <p>La verdadera prueba del solfeo avanzado ocurre en el contexto de la interpretación coral. Los elementos rítmicos y melódicos complejos rara vez aparecen aislados. Una obra de Stravinsky puede combinar cambios métricos constantes con líneas melódicas angulares y cromáticas. Una fuga de Bach exige independencia rítmica y melódica absoluta en una textura polifónica densa. Un motete renacentista puede requerir leer en claves de Do y navegar por armonías modales con afinación justa.</p>
             <p>El objetivo final de este entrenamiento es desarrollar la capacidad de:</p>
             <ul class="list-disc list-inside pl-4 mb-4">
@@ -250,66 +249,34 @@
      </footer>
 
     <script>
-        let audioCtx;
-        function getAudioContext() {
-            if (!audioCtx) {
-                try {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                } catch (e) {
-                    console.error("Web Audio API is not supported in this browser");
-                    alert("Web Audio API is not supported in this browser");
+        const sections_solfeo_mod1 = document.querySelectorAll('.fade-in-section');
+        const observerOptions_solfeo_mod1 = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const observerCallback_solfeo_mod1 = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in-section');
+                    observer.unobserve(entry.target);
                 }
-            }
-            return audioCtx;
-        }
+            });
+        };
+        const observer_solfeo_mod1 = new IntersectionObserver(observerCallback_solfeo_mod1, observerOptions_solfeo_mod1);
+        sections_solfeo_mod1.forEach(section => { observer_solfeo_mod1.observe(section); });
 
-        function playNote(frequency, duration = 0.5, startTime = 0) {
-            const ctx = getAudioContext();
-            if (!ctx) return;
-            const oscillator = ctx.createOscillator();
-            const gainNode = ctx.createGain();
-            oscillator.type = 'sine';
-            oscillator.frequency.setValueAtTime(frequency, ctx.currentTime + startTime);
-            gainNode.gain.setValueAtTime(0.3, ctx.currentTime + startTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
-            oscillator.connect(gainNode);
-            gainNode.connect(ctx.destination);
-            oscillator.start(ctx.currentTime + startTime);
-            oscillator.stop(ctx.currentTime + startTime + duration);
-        }
-
-        function playClick(time) {
-             const ctx = getAudioContext();
-             if (!ctx) return;
-             const oscillator = ctx.createOscillator();
-             const gainNode = ctx.createGain();
-             oscillator.type = 'square';
-             oscillator.frequency.setValueAtTime(880, ctx.currentTime + time);
-             gainNode.gain.setValueAtTime(0.2, ctx.currentTime + time);
-             gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + time + 0.05);
-             oscillator.connect(gainNode);
-             gainNode.connect(ctx.destination);
-             oscillator.start(ctx.currentTime + time);
-             oscillator.stop(ctx.currentTime + time + 0.05);
-        }
-
-        function midiToFreq(midiNote) {
-            return 440 * Math.pow(2, (midiNote - 69) / 12);
-        }
-
-        function setupSVG(svgId, height = 100) {
+        function setupSVG(svgId, height = 100, width = 600) {
             const svg = d3.select(`#${svgId}`);
-            if (svg.empty()) return null;
+            if (svg.empty()) { console.error(`SVG element #${svgId} not found.`); return null; }
             svg.selectAll("*").remove();
-            svg.attr("height", height);
-            const width = svg.node().getBoundingClientRect().width || 300;
-            svg.attr("width", width);
-            return { svg, width, height };
+            svg.attr("height", height)
+               .attr("width", '100%')
+               .attr("viewBox", `0 0 ${width} ${height}`);
+            const g = svg.append("g");
+            return { svg: g, width, height };
         }
 
         function drawStaff(svg, width, height, lines = 5) {
-            const staffTop = 20;
+            const staffTop = height / 2 - (lines - 1) * 5;
             const lineSpacing = 10;
+            const staffHeight = (lines - 1) * lineSpacing;
             for (let i = 0; i < lines; i++) {
                 svg.append("line")
                    .attr("x1", 10)
@@ -318,58 +285,99 @@
                    .attr("y2", staffTop + i * lineSpacing)
                    .attr("class", "staff-line");
             }
-            return { staffTop, lineSpacing };
+            return { staffTop, lineSpacing, staffHeight };
         }
 
         function drawClef(svg, staffTop, lineSpacing, type = 'G') {
+             const xPos = 20;
              if (type === 'G') {
                  svg.append("text")
-                    .attr("x", 15)
-                    .attr("y", staffTop + lineSpacing * 3 + 5)
+                    .attr("x", xPos)
+                    .attr("y", staffTop + lineSpacing * 3)
                     .attr("class", "clef")
                     .text("𝄞");
              } else if (type === 'F') {
                  svg.append("text")
-                     .attr("x", 15)
-                     .attr("y", staffTop + lineSpacing + 5)
+                     .attr("x", xPos)
+                     .attr("y", staffTop + lineSpacing)
                      .attr("class", "clef")
                      .text("𝄢");
              }
+             return xPos + 25;
         }
 
-        function drawTimeSignature(svg, staffTop, lineSpacing, topNum, bottomNum) {
-            const xPos = 45;
+        function drawTimeSignature(svg, xPos, staffTop, lineSpacing, topNum, bottomNum) {
              svg.append("text")
                 .attr("x", xPos)
-                .attr("y", staffTop + lineSpacing * 1.5)
+                .attr("y", staffTop + lineSpacing * 1)
                 .attr("class", "time-sig-num")
                 .text(topNum);
              svg.append("text")
                 .attr("x", xPos)
-                .attr("y", staffTop + lineSpacing * 3.5)
+                .attr("y", staffTop + lineSpacing * 3)
                 .attr("class", "time-sig-num")
                 .text(bottomNum);
+             return xPos + 25;
         }
 
         function drawNote(svg, x, y, durationType = 'q') {
             const noteHeadRadius = 5;
-            svg.append("circle")
+            const isFilled = ['q', 'e', 's'].includes(durationType);
+            svg.append("ellipse")
                .attr("cx", x)
                .attr("cy", y)
-               .attr("r", noteHeadRadius)
-               .attr("class", "note-head");
+               .attr("rx", noteHeadRadius * 1.2)
+               .attr("ry", noteHeadRadius)
+               .attr("class", "note-head")
+               .attr("fill", isFilled ? "#1f2937" : "none")
+               .attr("stroke", "#1f2937")
+               .attr("stroke-width", 1.5);
 
             if (durationType !== 'w') {
+                 const staffCenterLineY = staffTop + lineSpacing * 2;
                  const stemHeight = 30;
-                 const stemX = x + noteHeadRadius;
+                 const stemDirection = y > staffCenterLineY ? 1 : -1;
+                 const stemX = stemDirection === 1 ? x - noteHeadRadius * 1.1 : x + noteHeadRadius * 1.1;
+                 const stemY2 = y - stemHeight * stemDirection;
                  svg.append("line")
                     .attr("x1", stemX)
                     .attr("y1", y)
                     .attr("x2", stemX)
-                    .attr("y2", y - stemHeight)
+                    .attr("y2", stemY2)
                     .attr("class", "note-stem");
             }
         }
+
+         function drawRhythmNote(svg, x, y, durationValue) {
+             const noteHeadRadius = 5;
+             let noteType = 'q';
+             if (durationValue >= 1.9) noteType = 'w';
+             else if (durationValue >= 0.9) noteType = 'h';
+             else if (durationValue >= 0.4) noteType = 'q';
+             else noteType = 'e';
+
+             const isFilled = ['q', 'e', 's'].includes(noteType);
+             svg.append("ellipse")
+                .attr("cx", x)
+                .attr("cy", y)
+                .attr("rx", noteHeadRadius * 1.2)
+                .attr("ry", noteHeadRadius)
+                .attr("class", "note-head")
+                .attr("fill", isFilled ? "#1f2937" : "none")
+                .attr("stroke", "#1f2937")
+                .attr("stroke-width", 1.5);
+
+             if (noteType !== 'w') {
+                  const stemHeight = 30;
+                  const stemX = x + noteHeadRadius * 1.1;
+                  svg.append("line")
+                     .attr("x1", stemX)
+                     .attr("y1", y)
+                     .attr("x2", stemX)
+                     .attr("y2", y - stemHeight)
+                     .attr("class", "note-stem");
+             }
+         }
 
         function drawBarLine(svg, x, staffTop, staffHeight) {
              svg.append("line")
@@ -378,16 +386,34 @@
                 .attr("class", "measure-line");
         }
 
+        function midiToY(midiNote, staffTop, lineSpacing) {
+            const G4_MIDI = 67;
+            const G4_Y_POS = staffTop + lineSpacing;
+            const semitonesFromG4 = midiNote - G4_MIDI;
+            const diatonicSteps = [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6];
+            let stepsFromG = 0;
+            if (semitonesFromG4 >= 0) {
+                const octave = Math.floor(semitonesFromG4 / 12);
+                const noteInOctave = semitonesFromG4 % 12;
+                stepsFromG = diatonicSteps[noteInOctave] + octave * 7;
+            } else {
+                 const octave = Math.floor(Math.abs(semitonesFromG4 + 11) / 12);
+                 const noteInOctave = (semitonesFromG4 % 12 + 12) % 12;
+                 stepsFromG = -(7 - diatonicSteps[noteInOctave] + octave * 7);
+            }
+            return G4_Y_POS - stepsFromG * (lineSpacing / 2);
+        }
+
         const rhythmTempoSlider = document.getElementById('rhythm-tempo-slider');
         const rhythmTempoValue = document.getElementById('rhythm-tempo-value');
         const rhythmMeterSelect = document.getElementById('rhythm-meter-select');
         const rhythmComplexitySlider = document.getElementById('rhythm-complexity-slider');
         const rhythmComplexityValue = document.getElementById('rhythm-complexity-value');
         const generateRhythmBtn = document.getElementById('generate-rhythm-btn');
-        const playRhythmBtn = document.getElementById('play-rhythm-btn');
         const rhythmNotationSvgId = 'rhythm-notation-svg';
         let currentRhythmPattern = [];
         let currentTempo = 90;
+        let staffTop = 0, lineSpacing = 10;
 
         function generateRhythm() {
             if (!rhythmMeterSelect || !rhythmComplexitySlider) return;
@@ -396,30 +422,26 @@
             const [beats, beatType] = meter.split('/').map(Number);
             const numMeasures = 2;
             currentRhythmPattern = [];
+            const beatUnitDuration = beatType === 8 ? 0.5 : 1;
 
             for (let m = 0; m < numMeasures; m++) {
-                let measureDuration = beats;
-                if (beatType === 8) measureDuration /= 2;
-
-                let currentMeasureTime = 0;
-                while (currentMeasureTime < measureDuration - 0.01) {
-                     let duration;
+                let currentMeasureBeats = 0;
+                while (currentMeasureBeats < beats - 0.01) {
+                     let durationBeats;
                      const rand = Math.random();
-                     if (complexity === 1) duration = 1; // Quarter notes
-                     else if (complexity === 2) duration = (rand < 0.6) ? 1 : 0.5; // Quarters and eighths
-                     else if (complexity === 3) duration = (rand < 0.4) ? 1 : (rand < 0.8 ? 0.5 : 0.25); // Add sixteenths
-                     else if (complexity === 4) duration = (rand < 0.3) ? 1 : (rand < 0.6 ? 0.5 : (rand < 0.9 ? 0.25 : 0.75)); // Add dotted eighths
-                     else duration = (rand < 0.2) ? 1 : (rand < 0.5 ? 0.5 : (rand < 0.8 ? 0.25 : (rand < 0.9 ? 0.75 : 1/3))); // Add triplets (approx)
+                     if (complexity === 1) durationBeats = 1;
+                     else if (complexity === 2) durationBeats = (rand < 0.6) ? 1 : 0.5;
+                     else if (complexity === 3) durationBeats = (rand < 0.4) ? 1 : (rand < 0.8 ? 0.5 : 0.25);
+                     else if (complexity === 4) durationBeats = (rand < 0.3) ? 1 : (rand < 0.6 ? 0.5 : (rand < 0.9 ? 0.25 : 0.75));
+                     else durationBeats = (rand < 0.2) ? 1 : (rand < 0.5 ? 0.5 : (rand < 0.8 ? 0.25 : (rand < 0.9 ? 0.75 : 1/3)));
 
-                     if (beatType === 8) duration /= 2;
-
-                     if (currentMeasureTime + duration <= measureDuration) {
-                         currentRhythmPattern.push(duration);
-                         currentMeasureTime += duration;
+                     if (currentMeasureBeats + durationBeats <= beats) {
+                         currentRhythmPattern.push(durationBeats * beatUnitDuration);
+                         currentMeasureBeats += durationBeats;
                      } else {
-                         duration = measureDuration - currentMeasureTime;
-                          if(duration > 0.1) currentRhythmPattern.push(duration);
-                         currentMeasureTime = measureDuration;
+                         durationBeats = beats - currentMeasureBeats;
+                          if(durationBeats > 0.1) currentRhythmPattern.push(durationBeats * beatUnitDuration);
+                         currentMeasureBeats = beats;
                      }
                 }
                  currentRhythmPattern.push('|');
@@ -428,62 +450,45 @@
         }
 
         function drawRhythmNotation() {
-            const setup = setupSVG(rhythmNotationSvgId, 80);
-            if (!setup) return;
-            const { svg, width, height } = setup;
-            const { staffTop, lineSpacing } = drawStaff(svg, width, height, 1);
+            const setupResult = setupSVG(rhythmNotationSvgId, 100, 600);
+            if (!setupResult) return;
+            const { svg, width, height } = setupResult;
+            const staffInfo = drawStaff(svg, width, height, 1);
+            staffTop = staffInfo.staffTop;
+            lineSpacing = staffInfo.lineSpacing;
+            const staffHeight = staffInfo.staffHeight;
             const yPos = staffTop;
             let xPos = 30;
-            const noteSpacing = 30;
+            const spaceFactor = 40;
 
             currentRhythmPattern.forEach(item => {
                 if (item === '|') {
                     drawBarLine(svg, xPos, yPos - lineSpacing*1.5, lineSpacing * 3);
-                    xPos += noteSpacing / 2;
+                    xPos += spaceFactor / 3;
                 } else {
-                    let noteType = 'q';
-                    if (item >= 1.9) noteType = 'w';
-                    else if (item >= 0.9) noteType = 'h';
-                    else if (item >= 0.4) noteType = 'q';
-                    else noteType = 'e';
-                    drawNote(svg, xPos, yPos, noteType);
-                    xPos += noteSpacing * (item * (rhythmMeterSelect.value.endsWith('/8') ? 2 : 1));
+                    drawRhythmNote(svg, xPos, yPos, item);
+                    xPos += item * spaceFactor * 2;
                 }
-                 if (xPos > width - 20) xPos = 30;
+                 if (xPos > width - 20) {
+                     xPos = 30;
+                 }
             });
+             drawBarLine(svg, xPos, yPos - lineSpacing*1.5, lineSpacing * 3);
         }
 
-        function playRhythm() {
-            const ctx = getAudioContext();
-            if (!ctx || currentRhythmPattern.length === 0) return;
-            currentTempo = parseInt(rhythmTempoSlider.value);
-            const beatDuration = 60 / currentTempo;
-            let currentTime = 0;
-
-            currentRhythmPattern.forEach(item => {
-                if (item !== '|') {
-                    playClick(currentTime);
-                    currentTime += item * beatDuration * (rhythmMeterSelect.value.endsWith('/4') ? 1 : 0.5); // Adjust for beat unit
-                }
-            });
-        }
-
-        if(rhythmTempoSlider) rhythmTempoSlider.oninput = () => { if(rhythmTempoValue) rhythmTempoValue.textContent = rhythmTempoSlider.value; };
-        if(rhythmComplexitySlider) rhythmComplexitySlider.oninput = () => { if(rhythmComplexityValue) rhythmComplexityValue.textContent = rhythmComplexitySlider.value; };
+        if(rhythmTempoSlider && rhythmTempoValue) rhythmTempoSlider.oninput = () => { rhythmTempoValue.textContent = rhythmTempoSlider.value; };
+        if(rhythmComplexitySlider && rhythmComplexityValue) rhythmComplexitySlider.oninput = () => { rhythmComplexityValue.textContent = rhythmComplexitySlider.value; };
         if(generateRhythmBtn) generateRhythmBtn.onclick = generateRhythm;
-        if(playRhythmBtn) playRhythmBtn.onclick = playRhythm;
-        window.addEventListener('load', generateRhythm);
 
 
         const intervalTypeSelect = document.getElementById('interval-type-select');
         const intervalComplexitySlider = document.getElementById('interval-complexity-slider');
         const intervalComplexityValue = document.getElementById('interval-complexity-value');
         const generateIntervalBtn = document.getElementById('generate-interval-btn');
-        const playIntervalBtn = document.getElementById('play-interval-btn');
         const showIntervalBtn = document.getElementById('show-interval-btn');
         const intervalNotationSvgId = 'interval-notation-svg';
         const intervalAnswerOutput = document.getElementById('interval-answer-output');
-        let currentInterval = { midi1: 60, midi2: 60, name: "Unison" };
+        let currentInterval = { midi1: 60, midi2: 64, name: "3ª Mayor" };
 
         const intervalMap = {
             "m2": 1, "M2": 2, "m3": 3, "M3": 4, "P4": 5, "A4": 6, "d5": 6, "P5": 7,
@@ -491,49 +496,35 @@
         };
 
         function generateInterval() {
-            if (!intervalTypeSelect) return;
+            if (!intervalTypeSelect || !intervalComplexitySlider) return;
             const intervalType = intervalTypeSelect.value;
             const complexity = parseInt(intervalComplexitySlider.value);
-            const baseMidi = 60 + Math.floor(Math.random() * 12); // C4 to B4
+            const baseMidi = 60 + Math.floor(Math.random() * 12);
             const intervalSemitones = intervalMap[intervalType];
             const midi2 = baseMidi + intervalSemitones;
 
             currentInterval = { midi1: baseMidi, midi2: midi2, name: intervalTypeSelect.options[intervalTypeSelect.selectedIndex].text };
             drawIntervalNotation();
-            intervalAnswerOutput.classList.add('invisible');
-            intervalAnswerOutput.textContent = "";
+            if(intervalAnswerOutput) {
+                intervalAnswerOutput.classList.add('invisible');
+                intervalAnswerOutput.textContent = "";
+            }
         }
 
         function drawIntervalNotation() {
-            const setup = setupSVG(intervalNotationSvgId, 100);
-             if (!setup) return;
-            const { svg, width, height } = setup;
-            const { staffTop, lineSpacing } = drawStaff(svg, width, height);
+            const setupResult = setupSVG(intervalNotationSvgId, 100, 200);
+             if (!setupResult) return;
+            const { svg, width, height } = setupResult;
+            const staffInfo = drawStaff(svg, width, height);
+            staffTop = staffInfo.staffTop;
+            lineSpacing = staffInfo.lineSpacing;
             drawClef(svg, staffTop, lineSpacing);
 
             const noteY1 = midiToY(currentInterval.midi1, staffTop, lineSpacing);
             const noteY2 = midiToY(currentInterval.midi2, staffTop, lineSpacing);
 
-            drawNote(svg, 60, noteY1, 'h');
-            drawNote(svg, 100, noteY2, 'h');
-        }
-
-        function midiToY(midiNote, staffTop, lineSpacing) {
-            const C4_MIDI = 60;
-            const C4_Y_POS = staffTop + 5.5 * lineSpacing;
-            const semitonesFromC4 = midiNote - C4_MIDI;
-
-            const diatonicSteps = [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6];
-            const octave = Math.floor(semitonesFromC4 / 12);
-            const noteInOctave = semitonesFromC4 % 12;
-            const stepsFromC = diatonicSteps[noteInOctave < 0 ? noteInOctave + 12 : noteInOctave] + octave * 7;
-
-            return C4_Y_POS - stepsFromC * (lineSpacing / 2);
-        }
-
-        function playInterval() {
-            playNote(midiToFreq(currentInterval.midi1), 1.0, 0);
-            playNote(midiToFreq(currentInterval.midi2), 1.0, 0);
+            drawNote(svg, 70, noteY1, 'h');
+            drawNote(svg, 110, noteY2, 'h');
         }
 
         function showIntervalAnswer() {
@@ -542,11 +533,9 @@
              intervalAnswerOutput.classList.remove('invisible');
         }
 
-        if(intervalComplexitySlider) intervalComplexitySlider.oninput = () => { if(intervalComplexityValue) intervalComplexityValue.textContent = intervalComplexitySlider.value; };
+        if(intervalComplexitySlider && intervalComplexityValue) intervalComplexitySlider.oninput = () => { intervalComplexityValue.textContent = intervalComplexitySlider.value; };
         if(generateIntervalBtn) generateIntervalBtn.onclick = generateInterval;
-        if(playIntervalBtn) playIntervalBtn.onclick = playInterval;
         if(showIntervalBtn) showIntervalBtn.onclick = showIntervalAnswer;
-        window.addEventListener('load', generateInterval);
 
 
         const melodyDifficultySlider = document.getElementById('melody-difficulty-slider');
@@ -555,7 +544,6 @@
         const melodyLengthValue = document.getElementById('melody-length-value');
         const melodyModeSelect = document.getElementById('melody-mode-select');
         const generateMelodyBtn = document.getElementById('generate-melody-btn');
-        const playMelodyBtn = document.getElementById('play-melody-btn');
         const melodyNotationSvgId = 'melody-notation-svg';
         let currentMelody = [];
 
@@ -566,28 +554,28 @@
              const mode = melodyModeSelect.value;
              currentMelody = [];
              let currentMidi = 60 + Math.floor(Math.random() * 7);
+             const beatsPerBar = 4;
+             const notesPerBar = 4;
 
              const scaleIntervals = {
-                 major: [2, 2, 1, 2, 2, 2, 1],
-                 minor: [2, 1, 2, 2, 1, 2, 2],
-                 dorian: [2, 1, 2, 2, 2, 1, 2],
-                 mixolydian: [2, 2, 1, 2, 2, 1, 2],
+                 major: [2, 2, 1, 2, 2, 2, 1], minor: [2, 1, 2, 2, 1, 2, 2],
+                 dorian: [2, 1, 2, 2, 2, 1, 2], mixolydian: [2, 2, 1, 2, 2, 1, 2],
                  chromatic: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
              };
              let scale = scaleIntervals[mode] || scaleIntervals.major;
              let currentScaleDegree = 0;
 
-             for (let i = 0; i < numBars * 4; i++) {
-                 currentMelody.push({ midi: currentMidi, duration: 0.5 });
+             for (let i = 0; i < numBars * notesPerBar; i++) {
+                 currentMelody.push({ midi: currentMidi, duration: 1 });
+
                  let intervalSize = 0;
                  const r = Math.random();
-                 if (difficulty === 1) intervalSize = (r < 0.6) ? 0 : (r < 0.8 ? 1 : -1);
-                 else if (difficulty === 2) intervalSize = (r < 0.4) ? 0 : (r < 0.7 ? 1 : (r < 0.9 ? -1 : (Math.random() < 0.5 ? 2 : -2)));
-                 else intervalSize = Math.floor(Math.random() * (difficulty + 1)) - Math.floor(difficulty / 2);
+                 const maxInterval = difficulty + 1;
+                 intervalSize = Math.floor(Math.random() * (2 * maxInterval + 1)) - maxInterval;
+                 intervalSize = Math.sign(intervalSize) * Math.max(1, Math.abs(intervalSize));
 
                  if (mode !== 'chromatic') {
-                     let nextDegree = (currentScaleDegree + intervalSize) % scale.length;
-                     if (nextDegree < 0) nextDegree += scale.length;
+                     let nextDegree = (currentScaleDegree + intervalSize + scale.length * 10) % scale.length;
                      let semitoneChange = 0;
                      if (intervalSize > 0) {
                          for(let k=0; k<intervalSize; k++) semitoneChange += scale[(currentScaleDegree + k) % scale.length];
@@ -605,47 +593,45 @@
         }
 
         function drawMelodyNotation() {
-            const setup = setupSVG(melodyNotationSvgId, 100);
-            if (!setup) return;
-            const { svg, width, height } = setup;
-            const { staffTop, lineSpacing } = drawStaff(svg, width, height);
-            drawClef(svg, staffTop, lineSpacing);
-            drawTimeSignature(svg, staffTop, lineSpacing, 4, 4);
-            let xPos = 70;
-            const noteSpacing = 25;
-            let beatsInMeasure = 0;
+            const setupResult = setupSVG(melodyNotationSvgId, 100, 600);
+            if (!setupResult) return;
+            const { svg, width, height } = setupResult;
+            const staffInfo = drawStaff(svg, width, height);
+            staffTop = staffInfo.staffTop;
+            lineSpacing = staffInfo.lineSpacing;
+            const staffHeight = staffInfo.staffHeight;
+            let xPos = drawClef(svg, staffTop, lineSpacing);
+            xPos = drawTimeSignature(svg, xPos, staffTop, lineSpacing, 4, 4);
+            const noteSpacing = 35;
+            const beatsPerBar = 4;
+            let currentBeat = 0;
 
             currentMelody.forEach((note, index) => {
-                if (beatsInMeasure >= 4) {
-                    drawBarLine(svg, xPos - noteSpacing / 2, staffTop, lineSpacing * 4);
-                    beatsInMeasure = 0;
+                if (currentBeat >= beatsPerBar) {
+                    drawBarLine(svg, xPos - noteSpacing / 2, staffTop, staffHeight);
+                    currentBeat = 0;
                 }
                 if (xPos > width - 30) return;
                 const yPos = midiToY(note.midi, staffTop, lineSpacing);
                 drawNote(svg, xPos, yPos, 'q');
                 xPos += noteSpacing;
-                beatsInMeasure += 1;
+                currentBeat += note.duration;
             });
-             drawBarLine(svg, xPos - noteSpacing / 2, staffTop, lineSpacing * 4);
+             drawBarLine(svg, xPos - noteSpacing / 2, staffTop, staffHeight);
         }
 
-        function playMelody() {
-             const ctx = getAudioContext();
-             if (!ctx || currentMelody.length === 0) return;
-             let currentTime = 0;
-             currentMelody.forEach(note => {
-                 playNote(midiToFreq(note.midi), note.duration * 0.8, currentTime);
-                 currentTime += note.duration;
-             });
-        }
-
-        if(melodyDifficultySlider) melodyDifficultySlider.oninput = () => { if(melodyDifficultyValue) melodyDifficultyValue.textContent = melodyDifficultySlider.value; };
-        if(melodyLengthSlider) melodyLengthSlider.oninput = () => { if(melodyLengthValue) melodyLengthValue.textContent = melodyLengthSlider.value; };
+        if(melodyDifficultySlider && melodyDifficultyValue) melodyDifficultySlider.oninput = () => { melodyDifficultyValue.textContent = melodyDifficultySlider.value; };
+        if(melodyLengthSlider && melodyLengthValue) melodyLengthSlider.oninput = () => { melodyLengthValue.textContent = melodyLengthSlider.value; };
         if(generateMelodyBtn) generateMelodyBtn.onclick = generateMelody;
-        if(playMelodyBtn) playMelodyBtn.onclick = playMelody;
-        window.addEventListener('load', generateMelody);
+
+        window.addEventListener('load', () => {
+             generateRhythm();
+             generateInterval();
+             generateMelody();
+        });
 
     </script>
 
 </body>
 </html>
+
